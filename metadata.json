@@ -1,0 +1,6 @@
+{
+  "name": "MI Wifi",
+  "description": "A modern dashboard for local ISP and Hotspot operators to manage active users, bandwidth, and packages.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

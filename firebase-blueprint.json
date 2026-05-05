@@ -1,0 +1,73 @@
+{
+  "entities": {
+    "WifiZone": {
+      "title": "WiFi Zone",
+      "description": "A physical area covered by a WiFi signal",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "users": { "type": "number" },
+        "managementUrl": { "type": "string" }
+      },
+      "required": ["name", "status"]
+    },
+    "Infrastructure": {
+      "title": "System Infrastructure",
+      "description": "Core networking assets like NVR, Mikrotik, etc.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "users": { "type": "number" },
+        "managementUrl": { "type": "string" }
+      },
+      "required": ["name", "status"]
+    },
+    "Device": {
+      "title": "Connected Device",
+      "description": "A client device connected to the network",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "mac": { "type": "string" },
+        "ip": { "type": "string" },
+        "connectedAt": { "type": "string" },
+        "usage": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["name", "mac", "ip"]
+    },
+    "Package": {
+      "title": "WiFi Package",
+      "description": "A predefined data plan for users",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "duration": { "type": "string" },
+        "speed": { "type": "string" },
+        "limit": { "type": "string" }
+      },
+      "required": ["name", "price"]
+    }
+  },
+  "firestore": {
+    "/zones": {
+      "schema": "WifiZone",
+      "description": "Collection of WiFi zones"
+    },
+    "/infrastructure": {
+      "schema": "Infrastructure",
+      "description": "Collection of core networking infrastructure"
+    },
+    "/devices": {
+      "schema": "Device",
+      "description": "Collection of connected client devices"
+    },
+    "/packages": {
+      "schema": "Package",
+      "description": "Collection of available data packages"
+    }
+  }
+}
