@@ -50,6 +50,33 @@
         "limit": { "type": "string" }
       },
       "required": ["name", "price"]
+    },
+    "Nvr": {
+      "title": "NVR System",
+      "description": "Network Video Recorder for security cameras",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "channels": { "type": "number" },
+        "activeCameras": { "type": "number" },
+        "managementUrl": { "type": "string" }
+      },
+      "required": ["name", "status"]
+    },
+    "FileServer": {
+      "title": "File Server",
+      "description": "Network Attached Storage or File Server",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "storageTotal": { "type": "string" },
+        "storageUsed": { "type": "string" },
+        "uptime": { "type": "string" },
+        "managementUrl": { "type": "string" }
+      },
+      "required": ["name", "status"]
     }
   },
   "firestore": {
@@ -68,6 +95,14 @@
     "/packages": {
       "schema": "Package",
       "description": "Collection of available data packages"
+    },
+    "/nvr": {
+      "schema": "Nvr",
+      "description": "Collection of NVR systems"
+    },
+    "/fileservers": {
+      "schema": "FileServer",
+      "description": "Collection of file servers"
     }
   }
 }

@@ -13,7 +13,9 @@ import {
   MOCK_ZONES, 
   MOCK_INFRASTRUCTURE, 
   MOCK_DEVICES, 
-  MOCK_PACKAGES 
+  MOCK_PACKAGES,
+  MOCK_NVR,
+  MOCK_FILE_SERVERS
 } from '../constants';
 import { 
   Plus, 
@@ -24,6 +26,8 @@ import {
   Server, 
   Smartphone, 
   Package as PackageIcon,
+  ShieldCheck,
+  HardDrive,
   X,
   Save,
   LogIn,
@@ -37,7 +41,9 @@ enum CollectionName {
   ZONES = 'zones',
   INFRASTRUCTURE = 'infrastructure',
   DEVICES = 'devices',
-  PACKAGES = 'packages'
+  PACKAGES = 'packages',
+  NVR = 'nvr',
+  FILESERVERS = 'fileservers'
 }
 
 const ADMIN_PASSWORD = 'itmi123*@';
@@ -110,6 +116,24 @@ export function AdminPanel() {
         }
       }
 
+      // Sync NVR
+      const nvrSnap = await getDocs(collection(db, CollectionName.NVR));
+      if (nvrSnap.empty) {
+        for (const nvr of MOCK_NVR) {
+          const { id, ...data } = nvr;
+          await addDoc(collection(db, CollectionName.NVR), data);
+        }
+      }
+
+      // Sync File Servers
+      const fsSnap = await getDocs(collection(db, CollectionName.FILESERVERS));
+      if (fsSnap.empty) {
+        for (const fs of MOCK_FILE_SERVERS) {
+          const { id, ...data } = fs;
+          await addDoc(collection(db, CollectionName.FILESERVERS), data);
+        }
+      }
+
       setSyncComplete(true);
       setTimeout(() => setSyncComplete(false), 3000);
     } catch (error) {
@@ -168,6 +192,8 @@ export function AdminPanel() {
     [CollectionName.INFRASTRUCTURE]: Server,
     [CollectionName.DEVICES]: Smartphone,
     [CollectionName.PACKAGES]: PackageIcon,
+    [CollectionName.NVR]: ShieldCheck,
+    [CollectionName.FILESERVERS]: HardDrive,
   };
 
   if (!isAuthenticated) {
@@ -326,6 +352,16 @@ export function AdminPanel() {
                         <p className="text-xs text-slate-400">IP: <span className="text-blue-400">{item.ip}</span></p>
                         <p className="text-xs text-slate-400">MAC: <span className="text-slate-400 font-mono">{item.mac}</span></p>
                       </div>
+                    ) : activeTab === CollectionName.NVR ? (
+                      <div className="space-y-1">
+                        <p className="text-xs text-slate-400">Status: <span className="text-emerald-400 uppercase font-bold">{item.status}</span></p>
+                        <p className="text-xs text-slate-400">Cameras: <span className="text-white">{item.activeCameras}/{item.channels}</span></p>
+                      </div>
+                    ) : activeTab === CollectionName.FILESERVERS ? (
+                      <div className="space-y-1">
+                        <p className="text-xs text-slate-400">Status: <span className="text-emerald-400 uppercase font-bold">{item.status}</span></p>
+                        <p className="text-xs text-slate-400">Storage: <span className="text-white">{item.storageUsed}/{item.storageTotal}</span></p>
+                      </div>
                     ) : (
                       <div className="space-y-1">
                         <p className="text-xs text-slate-400">Price: <span className="text-emerald-400">৳{item.price}</span></p>
@@ -406,6 +442,28 @@ export function AdminPanel() {
                     <div>
                       <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">MAC</p>
                       <span className="text-slate-400 font-mono text-[10px]">{item.mac}</span>
+                    </div>
+                  </>
+                ) : activeTab === CollectionName.NVR ? (
+                  <>
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">Status</p>
+                      <span className="text-emerald-400 uppercase font-bold text-xs">{item.status}</span>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">Cameras</p>
+                      <span className="text-white text-xs">{item.activeCameras}/{item.channels}</span>
+                    </div>
+                  </>
+                ) : activeTab === CollectionName.FILESERVERS ? (
+                  <>
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">Status</p>
+                      <span className="text-emerald-400 uppercase font-bold text-xs">{item.status}</span>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">Storage</p>
+                      <span className="text-white text-xs">{item.storageUsed}/{item.storageTotal}</span>
                     </div>
                   </>
                 ) : (
@@ -513,6 +571,95 @@ export function AdminPanel() {
                             className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white focus:outline-none focus:border-blue-600 transition-all font-medium"
                           />
                         </div>
+                      </div>
+                    </>
+                  ) : activeTab === CollectionName.NVR ? (
+                    <>
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Management URL</label>
+                        <input 
+                          type="url" 
+                          value={formData.managementUrl || ''}
+                          onChange={(e) => setFormData({...formData, managementUrl: e.target.value})}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-600 transition-all font-medium"
+                          placeholder="http://..."
+                        />
+                      </div>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Status</label>
+                          <select 
+                            value={formData.status || 'online'}
+                            onChange={(e) => setFormData({...formData, status: e.target.value})}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white focus:outline-none focus:border-blue-600 transition-all font-medium"
+                          >
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Channels</label>
+                          <input 
+                            type="number" 
+                            value={formData.channels || 0}
+                            onChange={(e) => setFormData({...formData, channels: parseInt(e.target.value)})}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white focus:outline-none focus:border-blue-600 transition-all font-medium"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Active Cams</label>
+                          <input 
+                            type="number" 
+                            value={formData.activeCameras || 0}
+                            onChange={(e) => setFormData({...formData, activeCameras: parseInt(e.target.value)})}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white focus:outline-none focus:border-blue-600 transition-all font-medium"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : activeTab === CollectionName.FILESERVERS ? (
+                    <>
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Management URL</label>
+                        <input 
+                          type="url" 
+                          value={formData.managementUrl || ''}
+                          onChange={(e) => setFormData({...formData, managementUrl: e.target.value})}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-600 transition-all font-medium"
+                          placeholder="http://..."
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Storage Total</label>
+                          <input 
+                            type="text" 
+                            value={formData.storageTotal || ''}
+                            onChange={(e) => setFormData({...formData, storageTotal: e.target.value})}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white focus:outline-none focus:border-blue-600 transition-all font-medium"
+                            placeholder="e.g. 10TB"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Storage Used</label>
+                          <input 
+                            type="text" 
+                            value={formData.storageUsed || ''}
+                            onChange={(e) => setFormData({...formData, storageUsed: e.target.value})}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white focus:outline-none focus:border-blue-600 transition-all font-medium"
+                            placeholder="e.g. 4TB"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Uptime</label>
+                        <input 
+                          type="text" 
+                          value={formData.uptime || ''}
+                          onChange={(e) => setFormData({...formData, uptime: e.target.value})}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3.5 text-white focus:outline-none focus:border-blue-600 transition-all font-medium"
+                          placeholder="e.g. 120 Days"
+                        />
                       </div>
                     </>
                   ) : activeTab === CollectionName.DEVICES ? (

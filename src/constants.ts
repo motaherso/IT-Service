@@ -14,9 +14,12 @@ export const MOCK_ZONES: WifiZone[] = [
 ];
 
 export const MOCK_INFRASTRUCTURE: WifiZone[] = [
-  { id: 'z11', name: 'Printer', status: 'online', users: 1 },
-  { id: 'z12', name: 'NVR Mikrotik', status: 'online', users: 4 },
-  { id: 'z13', name: 'File Server', status: 'online', users: 2 },
+  { id: 'z11', name: 'Canon Printer-01', status: 'online', users: 1, managementUrl: 'http://192.168.88.200' },
+  { id: 'z12', name: 'Mikrotik Cloud Router', status: 'online', users: 84, managementUrl: 'http://192.168.88.1' },
+  { id: 'z14', name: 'Hikvision 16-CH NVR', status: 'online', users: 12, managementUrl: 'http://192.168.88.10' },
+  { id: 'z15', name: 'Dahua 8-CH NVR', status: 'online', users: 8, managementUrl: 'http://192.168.88.11' },
+  { id: 'z16', name: 'UniFi Protect NVR', status: 'online', users: 4, managementUrl: 'http://192.168.88.12' },
+  { id: 'z13', name: 'Primary File Server', status: 'online', users: 5, managementUrl: 'http://192.168.88.50' },
 ];
 
 export const MOCK_DEVICES: Device[] = [
@@ -35,6 +38,17 @@ export const MOCK_PACKAGES: Package[] = [
   { id: 'p2', name: 'Weekly Plus', price: 60, duration: '7 Days', speed: '10 Mbps', limit: 'Unlimited' },
   { id: 'p3', name: 'Monthly Ultra', price: 250, duration: '30 Days', speed: '20 Mbps', limit: 'Unlimited' },
   { id: 'p4', name: 'Gamer Pack', price: 150, duration: '15 Days', speed: '50 Mbps', limit: 'Unlimited' },
+];
+
+export const MOCK_NVR: Nvr[] = [
+  { id: 'n1', name: 'Hikvision 16-CH NVR', status: 'online', channels: 16, activeCameras: 12, managementUrl: 'http://192.168.88.10' },
+  { id: 'n2', name: 'Dahua 8-CH NVR', status: 'online', channels: 8, activeCameras: 8, managementUrl: 'http://192.168.88.11' },
+  { id: 'n3', name: 'UniFi Protect NVR', status: 'online', channels: 50, activeCameras: 4, managementUrl: 'http://192.168.88.12' },
+];
+
+export const MOCK_FILE_SERVERS: FileServer[] = [
+  { id: 'fs1', name: 'Primary File Server', status: 'online', storageTotal: '10TB', storageUsed: '4.2TB', uptime: '124 Days', managementUrl: 'http://192.168.88.50' },
+  { id: 'fs2', name: 'Backup Storage', status: 'online', storageTotal: '20TB', storageUsed: '15.8TB', uptime: '45 Days', managementUrl: 'http://192.168.88.51' },
 ];
 
 export const MOCK_USAGE: UsageData[] = [

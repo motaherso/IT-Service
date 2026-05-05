@@ -5,6 +5,8 @@ import { DeviceList } from './components/DeviceList';
 import { PackageCard } from './components/PackageCard';
 import { WifiZoneList } from './components/WifiZoneList';
 import { InfrastructureList } from './components/InfrastructureList';
+import { NvrList } from './components/NvrList';
+import { FileServerList } from './components/FileServerList';
 import { AdminPanel } from './components/AdminPanel';
 import { cn } from './lib/utils';
 import { 
@@ -20,7 +22,11 @@ import {
   Wifi,
   LayoutDashboard,
   Settings,
-  Zap
+  Zap,
+  Cpu,
+  ShieldCheck,
+  HardDrive,
+  Database
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -114,6 +120,37 @@ export default function App() {
                 </button>
               </div>
             </div>
+
+            {/* Core System Health Row */}
+            {activeTab === 'dashboard' && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { id: 'infrastructure', name: 'Mikrotik Cloud', icon: Cpu, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
+                  { id: 'nvr', name: 'NVR Security', icon: ShieldCheck, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+                  { id: 'fileservers', name: 'File Storage', icon: HardDrive, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20' },
+                ].map((core, i) => (
+                  <motion.div
+                    key={core.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    onClick={() => setActiveTab(core.id)}
+                    className={cn("p-4 rounded-[2rem] border flex items-center gap-4 bg-slate-900/40 backdrop-blur-md hover:bg-slate-900/60 transition-all cursor-pointer active:scale-95", core.border)}
+                  >
+                    <div className={cn("p-3 rounded-2xl", core.bg, core.color)}>
+                      <core.icon className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{core.name}</p>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-white font-bold text-sm">Operational</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
 
             {/* Main Tabs Content */}
             <AnimatePresence mode="wait">
@@ -260,6 +297,48 @@ export default function App() {
                 </motion.div>
               )}
 
+              {activeTab === 'nvr' && (
+                <motion.div
+                  key="nvr"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-bold text-white tracking-tight">Security Surveillance Systems</h3>
+                    <div className="flex gap-2">
+                       <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                          <span className="text-[10px] font-bold text-blue-400 uppercase">Recording Active</span>
+                       </div>
+                    </div>
+                  </div>
+                  <NvrList />
+                </motion.div>
+              )}
+
+              {activeTab === 'fileservers' && (
+                <motion.div
+                  key="fileservers"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-bold text-white tracking-tight">System Storage & File Servers</h3>
+                    <div className="flex gap-2">
+                       <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
+                          <Database className="w-4 h-4 text-indigo-400" />
+                          <span className="text-[10px] font-bold text-indigo-400 uppercase">Cloud Sync Active</span>
+                       </div>
+                    </div>
+                  </div>
+                  <FileServerList />
+                </motion.div>
+              )}
+
               {activeTab === 'admin' && (
                 <motion.div
                   key="admin"
@@ -275,10 +354,12 @@ export default function App() {
         </div>
 
         {/* Mobile Bottom Navigation */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-20 bg-slate-950/80 backdrop-blur-xl border-t border-slate-900 px-6 flex items-center justify-between z-50">
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-20 bg-slate-950/80 backdrop-blur-xl border-t border-slate-900 px-4 flex items-center justify-between z-50 overflow-x-auto no-scrollbar">
           {[
             { id: 'dashboard', icon: LayoutDashboard, label: 'Home' },
             { id: 'zones', icon: Wifi, label: 'Zones' },
+            { id: 'nvr', icon: ShieldCheck, label: 'NVR' },
+            { id: 'fileservers', icon: HardDrive, label: 'Storage' },
             { id: 'packages', icon: Zap, label: 'Plans' },
             { id: 'admin', icon: Settings, label: 'Admin' },
           ].map((item) => (

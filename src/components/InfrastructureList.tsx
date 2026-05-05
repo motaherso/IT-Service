@@ -2,7 +2,7 @@ import React from 'react';
 import { MOCK_INFRASTRUCTURE } from '../constants';
 import { useFirestoreData } from '../lib/hooks';
 import { WifiZone } from '../types';
-import { Printer, Server, ShieldCheck, ExternalLink, MoreHorizontal } from 'lucide-react';
+import { Printer, Server, ShieldCheck, ExternalLink, MoreHorizontal, Cpu, HardDrive } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export function InfrastructureList() {
@@ -11,8 +11,9 @@ export function InfrastructureList() {
   const getIcon = (name: string) => {
     const n = name.toLowerCase();
     if (n.includes('printer')) return Printer;
-    if (n.includes('server')) return Server;
-    if (n.includes('nvr') || n.includes('mikrotik')) return ShieldCheck;
+    if (n.includes('mikrotik') || n.includes('router')) return Cpu;
+    if (n.includes('nvr')) return ShieldCheck;
+    if (n.includes('server')) return HardDrive;
     return Server;
   };
 

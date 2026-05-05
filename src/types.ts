@@ -25,6 +25,25 @@ export interface Package {
   limit: string;
 }
 
+export interface Nvr {
+  id: string;
+  name: string;
+  status: 'online' | 'offline';
+  channels: number;
+  activeCameras: number;
+  managementUrl?: string;
+}
+
+export interface FileServer {
+  id: string;
+  name: string;
+  status: 'online' | 'offline';
+  storageTotal: string;
+  storageUsed: string;
+  uptime: string;
+  managementUrl?: string;
+}
+
 export interface UsageData {
   time: string;
   download: number;

@@ -7,6 +7,7 @@ import {
   Settings, 
   LayoutDashboard,
   Zap,
+  HardDrive,
   LogOut
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -23,8 +24,8 @@ export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
     { id: 'zones', label: 'WiFi Zones', icon: Wifi },
     { id: 'devices', label: 'Devices', icon: Users },
     { id: 'packages', label: 'Packages', icon: Zap },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'security', label: 'Security', icon: ShieldCheck },
+    { id: 'nvr', label: 'NVR Security', icon: ShieldCheck },
+    { id: 'fileservers', label: 'File Server', icon: HardDrive },
     { id: 'settings', label: 'Admin Panel', icon: Settings },
   ];
 
